@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { useAppStore } from '../../hooks/useAppState';
 import { playSound } from '../../utils/audio';
 import styles from './DrawStage.module.css';
-import copy from '../../data/copy.json';
 import positionsData from '../../data/positions.json';
 
 const CARD_BACK = '/cardback.jpg';

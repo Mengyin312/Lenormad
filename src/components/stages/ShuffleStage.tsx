@@ -9,7 +9,6 @@ import cardsData from '../../data/cards.json';
 import type { Card } from '../../types';
 
 /** 洗牌动画时长（毫秒） */
-const SHUFFLE_DURATION = 3500;
 
 type ShufflePhase = 'waiting' | 'shuffling' | 'spreading';
 
