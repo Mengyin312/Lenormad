@@ -1,0 +1,56 @@
+:root {
+  /* ── 背景层：深邃黑蓝 ── */
+  --color-bg-base:      #04040C;
+  --color-bg-elevated:  #080818;
+  --color-bg-card:      #0C0C1E;
+  --color-bg-glass:     rgba(8, 8, 24, 0.72);
+
+  /* ── 前景文字 ── */
+  --color-text-primary:   #EEEEF8;
+  --color-text-secondary: #7070A0;
+  --color-text-tertiary:  #38385A;
+
+  /* ── 紫色强调：更电气化 ── */
+  --color-accent:          #7C5CFC;
+  --color-accent-bright:   #9E7FFF;
+  --color-accent-dim:      #3E2EA0;
+  --color-accent-glow:     rgba(124, 92, 252, 0.55);
+  --color-accent-glow-sm:  rgba(124, 92, 252, 0.28);
+  --color-accent-glow-xs:  rgba(124, 92, 252, 0.12);
+
+  /* ── 金色：粒子与点缀 ── */
+  --color-gold:            #E8BF7C;
+  --color-gold-bright:     #FFD898;
+  --color-gold-glow:       rgba(232, 191, 124, 0.50);
+  --color-gold-glow-sm:    rgba(232, 191, 124, 0.22);
+
+  /* ── 渐变 ── */
+  --gradient-accent:  linear-gradient(135deg, #5E3FE0 0%, #9E7FFF 100%);
+  --gradient-gold:    linear-gradient(135deg, #C8973A 0%, #FFD898 100%);
+  --gradient-title:   linear-gradient(120deg, #9E7FFF 0%, #EEEEF8 45%, #E8BF7C 100%);
+
+  /* ── 错误色 ── */
+  --color-error: #FF5E7A;
+
+  /* ── 字体 ── */
+  --font-serif: "Cormorant Garamond", "Source Han Serif SC", "思源宋体", serif;
+  --font-sans:  "Inter", "PingFang SC", "Helvetica Neue", sans-serif;
+
+  /* ── 间距 ── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* ── 牌尺寸 ── */
+  --card-width:  140px;
+  --card-height: 240px;
+  --card-radius: 8px;
+
+  /* ── 发光阴影快捷值 ── */
+  --shadow-glow-purple: 0 0 20px var(--color-accent-glow), 0 0 60px var(--color-accent-glow-sm);
+  --shadow-glow-gold:   0 0 20px var(--color-gold-glow),   0 0 60px var(--color-gold-glow-sm);
+}

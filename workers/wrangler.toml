@@ -1,0 +1,6 @@
+name = "lenormand-interpret"
+main = "workers/interpret.ts"
+compatibility_date = "2024-01-01"
+
+# ANTHROPIC_API_KEY 通过 wrangler secret put ANTHROPIC_API_KEY 设置
+# 不要把 key 写在这里

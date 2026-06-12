@@ -1,0 +1,125 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: var(--space-xl);
+  padding: 0 var(--space-2xl);
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.prompt {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* 输入区：下划线 + 聚焦时紫色发光线 */
+.inputWrap {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  border-bottom: 1px solid var(--color-text-tertiary);
+  padding-bottom: var(--space-sm);
+  transition: border-color 0.35s ease;
+}
+
+.inputWrap::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent-glow), 0 0 20px var(--color-accent-glow-sm);
+  transition: width 0.45s ease;
+}
+
+.inputWrap:focus-within::after {
+  width: 100%;
+}
+
+.inputWrap:focus-within {
+  border-bottom-color: transparent;
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--color-text-primary);
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+  caret-color: var(--color-accent);
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* 示例面板：玻璃拟态 */
+.examplePanel {
+  width: 100%;
+  max-width: 520px;
+  background: var(--color-bg-glass);
+  border: 1px solid rgba(124, 92, 252, 0.14);
+  border-radius: 10px;
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow:
+    0 0 0 1px rgba(124, 92, 252, 0.06),
+    0 8px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.exampleTitle {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-xs);
+}
+
+.exampleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.exampleRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bad {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.good {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}

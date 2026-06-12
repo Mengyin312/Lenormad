@@ -1,0 +1,177 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  gap: var(--space-xl);
+  padding: var(--space-xl) var(--space-lg) var(--space-xl);
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* ── 5 张牌横排 ── */
+.cardsRow {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  flex-shrink: 0;  /* 卡牌区不压缩 */
+}
+
+.cardWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 翻牌容器 */
+.card {
+  width: 90px;
+  height: 152px;
+  border-radius: 6px;
+  position: relative;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
+  transition: box-shadow 0.4s ease;
+}
+
+/* 翻开后：金色光晕 */
+.cardFront {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(232, 191, 124, 0.20),
+    0 0 20px rgba(232, 191, 124, 0.18);
+}
+
+.cardBackImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  pointer-events: none;
+}
+
+.cardFaceContent {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  backface-visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.cardFrontImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.cardFront .cardFaceContent { opacity: 1; }
+.cardFront .cardBackImg     { opacity: 0; }
+
+/* 牌名标签 */
+.cardLabel {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.04em;
+  opacity: 0;
+}
+
+/* ── AI 解读区域：玻璃拟态面板 ── */
+.interpretation {
+  max-width: 560px;
+  width: 100%;
+  flex: 1;           /* 吃掉所有剩余纵向空间 */
+  min-height: 0;     /* 允许 flex 子元素内部滚动 */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  opacity: 0;
+  background: var(--color-bg-glass);
+  border: 1px solid rgba(124, 92, 252, 0.16);
+  border-radius: 12px;
+  padding: var(--space-xl);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(124, 92, 252, 0.07),
+    0 8px 48px rgba(0, 0, 0, 0.50),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.interpretTitle {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-accent-bright);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.interpretBody {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  text-align: left;
+  white-space: pre-wrap;
+  flex: 1;           /* 填满解读面板内部剩余空间 */
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 92, 252, 0.30) transparent;
+}
+
+.interpretBody::-webkit-scrollbar {
+  width: 3px;
+}
+.interpretBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+.interpretBody::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 252, 0.30);
+  border-radius: 2px;
+}
+
+.placeholder {
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+/* 错误状态 */
+.errorWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+.errorText {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--color-error);
+  letter-spacing: 0.04em;
+}
+
+.errorBody {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.03em;
+}

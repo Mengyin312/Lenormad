@@ -1,0 +1,132 @@
+/* ─── Tutorial Stage ─────────────────────────────────────────────── */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 64px 0 52px;
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* 顶部引言 */
+.intro {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+  text-align: center;
+}
+
+/* ─── 主演示区 ───────────────────────────────────────────────────── */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* 进度环 + 图标一体容器 */
+.gestureOrb {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG 圆环叠在最下层 */
+.gestureOrbRing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+}
+
+/* 图标居中，浮在环上 */
+.gestureOrbIcon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 16px;
+  background: rgba(124, 92, 252, 0.07);
+  border: 1px solid rgba(124, 92, 252, 0.16);
+  box-shadow:
+    0 0 20px rgba(124, 92, 252, 0.12),
+    inset 0 0 14px rgba(124, 92, 252, 0.05);
+}
+
+/* 手势文案 */
+.label {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.03em;
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.85;
+}
+
+/* ─── 底部提示区 ─────────────────────────────────────────────────── */
+.indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hint {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ─── 准备好了 ───────────────────────────────────────────────────── */
+.readyText {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.10em;
+  opacity: 0;
+  filter: drop-shadow(0 0 14px rgba(124, 92, 252, 0.45));
+  /* 准备阶段居中对齐 */
+  align-self: center;
+  margin: auto;
+}
+
+/* ─── Dev debug bar ──────────────────────────────────────────────── */
+.debug {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--color-accent);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 99;
+}

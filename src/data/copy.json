@@ -1,0 +1,69 @@
+{
+  "entry": {
+    "welcomeLine1": "你好",
+    "welcomeLine2": "欢迎开启雷诺曼占卜",
+    "enterButton": "进入"
+  },
+  "cameraPermission": {
+    "explanation": "接下来,你将用手参与一次占卜。\n\n我们需要看见你的手。\n画面不会被保存,也不会离开你的设备。",
+    "allowButton": "允许"
+  },
+  "tutorial": {
+    "intro": "在开始之前,你需要知道三件事。",
+    "gesture1": "握紧拳头,稍作停留——开始与结束,都用这个动作。",
+    "gesture2": "张开手掌面对镜头——牌面上会出现一道金色光点,随你的掌心移动。",
+    "gesture3": "当光点停在你想要的牌上,捏合拇指与食指,那张牌就属于你了。",
+    "ready": "准备好了。"
+  },
+  "question": {
+    "prompt": "用一句话,写下你想问的事。",
+    "placeholder": "在这里写下你的问题",
+    "exampleLink": "怎么提问更好",
+    "exampleTitle": "一个好的问题,会得到一个好的回应。",
+    "examples": [
+      { "bad": "我会幸福吗?", "good": "接下来三个月,我和 ta 的关系会怎样发展?" },
+      { "bad": "我该选 A 还是 B?", "good": "如果我选择 A,接下来会发生什么?" },
+      { "bad": "我适合做什么工作?", "good": "我能在一个月内找到工作吗?" }
+    ]
+  },
+  "shuffle": {
+    "prompt": "握紧拳头,让牌堆听见你的问题。",
+    "drawnPrompt": "牌已就位。轻触你想要的牌。"
+  },
+  "draw": {
+    "positionLabels": ["第一张:背景", "第二张:近况", "第三张:核心", "第四张:方向", "第五张:启示"]
+  },
+  "reveal": {
+    "shortLabels": ["背景", "近况", "核心", "方向", "启示"],
+    "interpretationTitle": "这五张牌,正在对你说",
+    "generatingPlaceholder": "牌正在被读。"
+  },
+  "result": {
+    "title": "一次占卜",
+    "qrCallout": "扫码,你也可以试一次。",
+    "againPrompt": "想再问一次?握紧拳头。",
+    "transitionText": "清空你的思绪。"
+  },
+  "errors": {
+    "noCamera": {
+      "title": "镜中之手未现。",
+      "body": "请检查浏览器是否允许了摄像头权限,然后重新进入。"
+    },
+    "handLost": {
+      "title": "你的手离开了视野。",
+      "body": "抬起手,让指尖回到画面中。"
+    },
+    "apiFailed": {
+      "title": "牌已读完,但命运的提示还不明显。",
+      "body": "这次的连接出了一点问题,请稍后再试。"
+    },
+    "browserUnsupported": {
+      "title": "这扇门暂时不为你打开。",
+      "body": "这次占卜需要现代浏览器和摄像头支持,请尝试用最新版的 Chrome、Safari 或 Edge 重新进入。"
+    },
+    "modelLoadFailed": {
+      "title": "占卜的工具暂未就绪,请检查网络后刷新页面。",
+      "body": ""
+    }
+  }
+}
