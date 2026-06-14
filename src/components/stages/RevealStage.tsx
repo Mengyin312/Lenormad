@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { useAppStore } from '../../hooks/useAppState';
 import { streamInterpretation } from '../../utils/apiClient';
+import { stripMarkdown } from '../../utils/format';
 import { playSound } from '../../utils/audio';
 import styles from './RevealStage.module.css';
 import copy from '../../data/copy.json';
@@ -163,7 +164,7 @@ export default function RevealStage() {
             </div>
           ) : (
             <p ref={interpretBodyRef} className={styles.interpretBody}>
-              {interpretText || (
+              {stripMarkdown(interpretText) || (
                 <span className={styles.placeholder}>{copy.reveal.generatingPlaceholder}</span>
               )}
             </p>

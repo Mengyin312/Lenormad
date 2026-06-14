@@ -5,6 +5,7 @@ import QRCode from 'qrcode';
 import { useAppStore } from '../../hooks/useAppState';
 import { useGestureDetection } from '../../hooks/useGestureDetection';
 import type { SelectedCard } from '../../types';
+import { stripMarkdown } from '../../utils/format';
 import styles from './ResultStage.module.css';
 import copy from '../../data/copy.json';
 
@@ -161,7 +162,7 @@ export default function ResultStage() {
             牌阵整体解读
             <span className={styles.sectionLine} />
           </h2>
-          <p className={styles.interpretText}>{interpretation}</p>
+          <p className={styles.interpretText}>{stripMarkdown(interpretation)}</p>
         </section>
 
         {/* 底部留白，让内容不贴着操作栏 */}
@@ -243,7 +244,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
       <div className={styles.scDivider} />
 
       {/* AI 解读 */}
-      <p className={styles.scReading}>{interpretation}</p>
+      <p className={styles.scReading}>{stripMarkdown(interpretation)}</p>
 
       <div className={styles.scDivider} />
 
