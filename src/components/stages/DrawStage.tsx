@@ -10,10 +10,10 @@ const CARD_BACK = '/cardback.jpg';
 // ── 牌局布局常量 ───────────────────────────────────────────────
 const CARD_W   = 110;
 const CARD_H   = 185;
-const X_STEP   = 30;   // 同排牌左边缘间距
-const ROW_GAP  = 32;   // 两排之间的垂直间距
-const GRID_W   = X_STEP * 17 + CARD_W;      // 620
-const GRID_H   = CARD_H * 2 + ROW_GAP;      // 402
+const X_STEP   = 42;   // 同排牌左边缘间距（拉开，减少拥挤感）
+const ROW_GAP  = 40;   // 两排之间的垂直间距
+const GRID_W   = X_STEP * 17 + CARD_W;      // 824
+const GRID_H   = CARD_H * 2 + ROW_GAP;      // 410
 const SLOT_GAP = 24;
 
 // ── 预计算每张牌的位置和可见区域 ──────────────────────────────────
@@ -62,9 +62,18 @@ export default function DrawStage() {
   const selectedCards   = useAppStore((s) => s.selectedCards);
   const addSelectedCard = useAppStore((s) => s.addSelectedCard);
 
-  const [pickedSet, setPickedSet]   = useState<Set<number>>(new Set());
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [dotPos, setDotPos]         = useState<{ x: number; y: number } | null>(null);
+  const [pickedSet, setPickedSet]           = useState<Set<number>>(new Set());
+  const [gestureHovered, setGestureHovered] = useState<number | null>(null);
+  const [mouseHovered, setMouseHovered]     = useState<number | null>(null);
+  const [dotPos, setDotPos]                 = useState<{ x: number; y: number } | null>(null);
+
+  // 鼠标优先；两者都用于「当前悬停」判定，但来源决定描边颜色
+  const hoveredIdx  = mouseHovered ?? gestureHovered;
+  const hoverSource: 'mouse' | 'gesture' = mouseHovered !== null ? 'mouse' : 'gesture';
+
+  // 供 pinch 订阅读取最新手势悬停（避免每帧重订阅）
+  const gestureHoveredRef = useRef<number | null>(null);
+  useEffect(() => { gestureHoveredRef.current = gestureHovered; }, [gestureHovered]);
 
   const containerRef  = useRef<HTMLDivElement>(null);
   const gridRef       = useRef<HTMLDivElement>(null);
@@ -100,7 +109,7 @@ export default function DrawStage() {
       if (!isPointing || !fingerTipNorm) {
         dotBufRef.current = [];   // 重置平滑缓冲
         setDotPos(null);
-        setHoveredIdx(null);
+        setGestureHovered(null);
         return;
       }
 
@@ -128,7 +137,7 @@ export default function DrawStage() {
       // 转为 grid 内坐标进行悬停检测
       const rect = gridRectRef.current;
       if (!rect) return;
-      setHoveredIdx(findHovered(sx - rect.left, sy - rect.top, pickedSet));
+      setGestureHovered(findHovered(sx - rect.left, sy - rect.top, pickedSet));
     });
     return unsub;
   }, [pickedSet]);
@@ -143,25 +152,29 @@ export default function DrawStage() {
     }
     if (hoveredIdx !== null) {
       const el = cardEls.current.get(hoveredIdx);
+      // 鼠标悬停 → 金色描边；手势悬停 → 紫色描边
+      const glow = hoverSource === 'mouse'
+        ? `0 0 0 1px var(--color-gold), 0 0 16px var(--color-gold-glow), 0 0 40px var(--color-gold-glow-sm)`
+        : `0 0 0 1px var(--color-accent), 0 0 16px var(--color-accent-glow), 0 0 40px var(--color-accent-glow-sm)`;
       if (el) gsap.to(el, {
         y: -12,
-        boxShadow: `0 0 0 1px var(--color-accent), 0 0 16px var(--color-accent-glow), 0 0 40px var(--color-accent-glow-sm)`,
+        boxShadow: glow,
         duration: 0.3, ease: 'power2.out',
       });
     }
     prevHoveredRef.current = hoveredIdx;
-  }, [hoveredIdx]);
+  }, [hoveredIdx, hoverSource]);
 
-  // ── 捏合选牌 ──────────────────────────────────────────────────
-  const handlePinch = useCallback(() => {
+  // ── 选牌（手势捏合 / 鼠标点击共用） ─────────────────────────────
+  const pickCard = useCallback((idx: number | null) => {
     if (animatingRef.current) return;
-    if (hoveredIdx === null) return;
-    if (pickedSet.has(hoveredIdx)) return;
+    if (idx === null) return;
+    if (pickedSet.has(idx)) return;
 
     const slotIdx = pickedSet.size; // 下一个空槽位索引（0-4）
     if (slotIdx >= 5) return;
 
-    const cardEl = cardEls.current.get(hoveredIdx);
+    const cardEl = cardEls.current.get(idx);
     const slotEl = slotEls.current[slotIdx];
     if (!cardEl || !slotEl) return;
 
@@ -175,7 +188,8 @@ export default function DrawStage() {
     const dh = slotRect.height / cardRect.height;
 
     // 重置当前悬停状态
-    setHoveredIdx(null);
+    setGestureHovered(null);
+    setMouseHovered(null);
     prevHoveredRef.current = null;
 
     // 选牌音效
@@ -193,10 +207,10 @@ export default function DrawStage() {
         addSelectedCard({
           position: slotIdx + 1,
           positionLabel: positionsData[slotIdx].label,
-          card: drawnDeck[hoveredIdx],
+          card: drawnDeck[idx],
         });
         // 标记已选
-        setPickedSet((prev) => new Set(prev).add(hoveredIdx));
+        setPickedSet((prev) => new Set(prev).add(idx));
         // 槽位发光
         if (slotEl) gsap.fromTo(slotEl,
           { boxShadow: `0 0 20px var(--color-accent-glow)` },
@@ -205,17 +219,17 @@ export default function DrawStage() {
         animatingRef.current = false;
       },
     });
-  }, [hoveredIdx, pickedSet, drawnDeck, addSelectedCard]);
+  }, [pickedSet, drawnDeck, addSelectedCard]);
 
-  // ── 订阅 pinchTriggered ────────────────────────────────────
+  // ── 订阅 pinchTriggered（手势捏合选当前手势悬停的牌） ──────────────
   useEffect(() => {
     const unsub = useAppStore.subscribe((state) => {
       if (state.gestureState.pinchTriggered && state.gestureState.isPointing) {
-        handlePinch();
+        pickCard(gestureHoveredRef.current);
       }
     });
     return unsub;
-  }, [handlePinch]);
+  }, [pickCard]);
 
   // ── 5 张选完 → 过渡到 REVEAL ─────────────────────────────────
   useEffect(() => {
@@ -265,6 +279,7 @@ export default function DrawStage() {
         ref={gridRef}
         className={styles.grid}
         style={{ width: GRID_W, height: GRID_H }}
+        onMouseLeave={() => setMouseHovered(null)}
       >
         {CARD_LAYOUTS.map(({ deckIndex, x, y, zIndex }) => {
           const isPicked = pickedSet.has(deckIndex);
@@ -274,6 +289,8 @@ export default function DrawStage() {
               ref={(el) => { if (el) cardEls.current.set(deckIndex, el); }}
               className={`${styles.card} ${isPicked ? styles.cardGhost : ''}`}
               style={{ left: x, top: y, width: CARD_W, height: CARD_H, zIndex }}
+              onMouseEnter={() => { if (!isPicked) setMouseHovered(deckIndex); }}
+              onClick={() => { if (!isPicked) pickCard(deckIndex); }}
             >
               {!isPicked && (
                 <img
@@ -291,7 +308,7 @@ export default function DrawStage() {
       {/* ── 底部提示 ── */}
       <p className={styles.hint}>
         {pickedCount < 5
-          ? `第 ${pickedCount + 1} / 5 张　伸出食指瞄准 · 捏合选中`
+          ? `第 ${pickedCount + 1} / 5 张　伸出食指瞄准 · 捏合选中，或用鼠标点击选牌`
           : ''}
       </p>
 
