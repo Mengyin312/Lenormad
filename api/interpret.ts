@@ -9,6 +9,9 @@
 
 export const config = { runtime: 'edge' };
 
+// Vercel Edge 运行时在 process.env 上注入环境变量；声明类型以通过编译
+declare const process: { env: Record<string, string | undefined> };
+
 // ── 完整系统提示词 ────────────────────────────────────────────────
 const SYSTEM_PROMPT = `你是一位 Lenormand 占卜师，正在为用户解读他刚刚抽出的五张牌（一字阵）。
 
