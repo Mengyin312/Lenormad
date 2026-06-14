@@ -19,7 +19,7 @@ type Phase = 'step0' | 'step1' | 'step2' | 'ready';
 const GESTURES = [
   { label: copy.tutorial.gesture1, hint: '握紧拳头，停留约 2 秒',        demo: 'fist'  },
   { label: copy.tutorial.gesture2, hint: '张开手掌，面向镜头，保持约 1 秒', demo: 'palm'  },
-  { label: copy.tutorial.gesture3, hint: '四指并拢，大拇指贴合',           demo: 'pinch' },
+  { label: copy.tutorial.gesture3, hint: '四根手指并拢，再与大拇指捏合在一起', demo: 'pinch' },
 ];
 
 export default function TutorialStage() {
