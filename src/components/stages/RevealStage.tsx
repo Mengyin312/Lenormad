@@ -24,6 +24,7 @@ export default function RevealStage() {
   const [interpretText, setInterpretText] = useState('');
   const [interpretDone, setInterpretDone] = useState(false);
   const [apiError, setApiError]           = useState<string | null>(null);
+  const [retryNonce, setRetryNonce]       = useState(0);
 
   const containerRef    = useRef<HTMLDivElement>(null);
   const cardRefs        = useRef<(HTMLDivElement | null)[]>([]);
@@ -101,7 +102,15 @@ export default function RevealStage() {
 
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showInterpret]);
+  }, [showInterpret, retryNonce]);
+
+  // 重新加载解读
+  const handleRetry = () => {
+    setApiError(null);
+    setInterpretText('');
+    setInterpretDone(false);
+    setRetryNonce((n) => n + 1);
+  };
 
   // 流式输出时自动滚到底部，确保最新文字始终可见
   useEffect(() => {
@@ -148,6 +157,9 @@ export default function RevealStage() {
             <div className={styles.errorWrap}>
               <p className={styles.errorText}>{copy.errors.apiFailed.title}</p>
               <p className={styles.errorBody}>{copy.errors.apiFailed.body}</p>
+              <button className={styles.retryBtn} onClick={handleRetry}>
+                重新加载解读
+              </button>
             </div>
           ) : (
             <p ref={interpretBodyRef} className={styles.interpretBody}>
