@@ -10,9 +10,9 @@ const CARD_BACK = '/cardback.jpg';
 // ── 牌局布局常量 ───────────────────────────────────────────────
 const CARD_W   = 110;
 const CARD_H   = 185;
-const X_STEP   = 42;   // 同排牌左边缘间距（拉开，减少拥挤感）
+const X_STEP   = 54;   // 同排牌左边缘间距（拉开，减少拥挤感）
 const ROW_GAP  = 40;   // 两排之间的垂直间距
-const GRID_W   = X_STEP * 17 + CARD_W;      // 824
+const GRID_W   = X_STEP * 17 + CARD_W;      // 1028
 const GRID_H   = CARD_H * 2 + ROW_GAP;      // 410
 const SLOT_GAP = 24;
 

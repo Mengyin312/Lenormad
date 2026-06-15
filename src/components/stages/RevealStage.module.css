@@ -119,6 +119,113 @@
   text-align: center;
 }
 
+/* 滚动容器：吃掉面板剩余空间，单牌牌意 + 整体解读都在此滚动 */
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 92, 252, 0.30) transparent;
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollArea::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 252, 0.30);
+  border-radius: 2px;
+}
+
+/* ── 单牌牌意（无需 AI，立即可读） ── */
+.singleMeanings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.sm {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid rgba(124, 92, 252, 0.08);
+}
+.sm:last-child { border-bottom: none; }
+
+.smHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.smPos {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  color: var(--color-accent-bright);
+  border: 1px solid rgba(124, 92, 252, 0.28);
+  border-radius: 9px;
+  padding: 1px 7px;
+  flex-shrink: 0;
+}
+
+.smName {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  letter-spacing: 0.04em;
+}
+
+.smKw {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
+  opacity: 0.75;
+}
+
+.smMeaning {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+
+/* 整体解读分隔 */
+.smDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--space-sm) 0 0;
+}
+.smDivider::before,
+.smDivider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124, 92, 252, 0.20), transparent);
+}
+.smDividerText {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--color-text-tertiary);
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
 .interpretBody {
   font-family: var(--font-serif);
   font-size: 17px;
@@ -128,29 +235,101 @@
   letter-spacing: 0.03em;
   text-align: left;
   white-space: pre-wrap;
-  flex: 1;           /* 填满解读面板内部剩余空间 */
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: 6px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(124, 92, 252, 0.30) transparent;
 }
 
-.interpretBody::-webkit-scrollbar {
-  width: 3px;
+/* ── 加载状态：文字 + 跳动的三个点 + 进度条 ── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--space-sm) 0;
 }
-.interpretBody::-webkit-scrollbar-track {
-  background: transparent;
+
+.loadingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.interpretBody::-webkit-scrollbar-thumb {
-  background: rgba(124, 92, 252, 0.30);
+
+/* 不确定型进度条 */
+.progressTrack {
+  position: relative;
+  width: 100%;
+  height: 3px;
   border-radius: 2px;
+  background: rgba(124, 92, 252, 0.12);
+  overflow: hidden;
 }
 
-.placeholder {
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 38%;
+  border-radius: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--color-accent-bright),
+    transparent
+  );
+  box-shadow: 0 0 10px rgba(124, 92, 252, 0.5);
+  animation: indeterminate 1.4s ease-in-out infinite;
+}
+
+@keyframes indeterminate {
+  0%   { left: -40%; }
+  100% { left: 100%; }
+}
+
+.loadingText {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 400;
   color: var(--color-text-tertiary);
   font-style: italic;
+  letter-spacing: 0.04em;
 }
+
+.dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  opacity: 0.4;
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+.dots i:nth-child(2) { animation-delay: 0.18s; }
+.dots i:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes dotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40%           { opacity: 1;    transform: translateY(-4px); }
+}
+
+/* ── 再来一次 ── */
+.restartBtn {
+  align-self: center;
+  margin-top: var(--space-sm);
+  padding: 8px 22px;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.10em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+.restartBtn:hover:not(:disabled) { color: var(--color-text-secondary); }
+.restartBtn:disabled { opacity: 0.35; cursor: default; }
 
 /* 错误状态 */
 .errorWrap {

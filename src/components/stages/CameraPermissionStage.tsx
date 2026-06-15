@@ -4,12 +4,15 @@ import { useAppStore } from '../../hooks/useAppState';
 import styles from './CameraPermissionStage.module.css';
 import copy from '../../data/copy.json';
 
+const DEV = import.meta.env.DEV;
+
 interface Props {
   onStreamReady: (stream: MediaStream) => void;
 }
 
 export default function CameraPermissionStage({ onStreamReady }: Props) {
   const setError = useAppStore((s) => s.setError);
+  const setStage = useAppStore((s) => s.setStage);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +72,16 @@ export default function CameraPermissionStage({ onStreamReady }: Props) {
       >
         {loading ? '…' : copy.cameraPermission.allowButton}
       </button>
+
+      {/* 开发模式：跳过摄像头，直接进入后续阶段（手势不可用，仅供预览 UI） */}
+      {DEV && (
+        <button
+          className={styles.devSkipBtn}
+          onClick={() => setStage('TUTORIAL')}
+        >
+          跳过摄像头（开发）
+        </button>
+      )}
     </div>
   );
 }

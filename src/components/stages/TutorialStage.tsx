@@ -22,6 +22,20 @@ const GESTURES = [
   { label: copy.tutorial.gesture3, hint: '四根手指并拢，再与大拇指捏合在一起', demo: 'pinch' },
 ];
 
+// 高亮关键动作词（更白、更粗）
+const EMPHASIS = '四根手指并拢';
+function withEmphasis(text: string): ReactNode {
+  const idx = text.indexOf(EMPHASIS);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <strong className={styles.emphasis}>{EMPHASIS}</strong>
+      {text.slice(idx + EMPHASIS.length)}
+    </>
+  );
+}
+
 export default function TutorialStage() {
   const setStage            = useAppStore((s) => s.setStage);
   const isHandTrackingReady = useAppStore((s) => s.isHandTrackingReady);
@@ -170,7 +184,7 @@ export default function TutorialStage() {
               {GESTURES[gestureIdx].demo === 'pinch' && <PinchSVG />}
             </GestureOrb>
 
-            <p className={styles.label}>{GESTURES[gestureIdx].label}</p>
+            <p className={styles.label}>{withEmphasis(GESTURES[gestureIdx].label)}</p>
           </div>
 
           {/* 手部指示器 */}
@@ -180,7 +194,7 @@ export default function TutorialStage() {
               <span className={styles.hint}>正在准备识别系统…</span>
             )}
             {isHandTrackingReady && (
-              <span className={styles.hint}>{GESTURES[gestureIdx].hint}</span>
+              <span className={styles.hint}>{withEmphasis(GESTURES[gestureIdx].hint)}</span>
             )}
           </div>
         </>

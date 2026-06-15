@@ -20,18 +20,20 @@ export default function RevealStage() {
   const appendInterpretation = useAppStore((s) => s.appendInterpretation);
   const setIsInterpreting    = useAppStore((s) => s.setIsInterpreting);
   const setError             = useAppStore((s) => s.setError);
+  const reset                = useAppStore((s) => s.reset);
 
   const [showInterpret, setShowInterpret] = useState(false);
   const [interpretText, setInterpretText] = useState('');
   const [interpretDone, setInterpretDone] = useState(false);
   const [apiError, setApiError]           = useState<string | null>(null);
   const [retryNonce, setRetryNonce]       = useState(0);
+  const [fading, setFading]               = useState(false);
 
   const containerRef    = useRef<HTMLDivElement>(null);
   const cardRefs        = useRef<(HTMLDivElement | null)[]>([]);
   const nameRefs        = useRef<(HTMLSpanElement | null)[]>([]);
   const interpretRef    = useRef<HTMLDivElement>(null);
-  const interpretBodyRef = useRef<HTMLParagraphElement>(null);
+  const scrollAreaRef   = useRef<HTMLDivElement>(null);
 
   // 淡入
   useEffect(() => {
@@ -115,9 +117,19 @@ export default function RevealStage() {
 
   // 流式输出时自动滚到底部，确保最新文字始终可见
   useEffect(() => {
-    const el = interpretBodyRef.current;
+    const el = scrollAreaRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [interpretText]);
+
+  // 「再来一次」：淡出后回到起点
+  const handleRestart = () => {
+    if (fading) return;
+    setFading(true);
+    gsap.to(containerRef.current, {
+      opacity: 0, duration: 0.6, ease: 'power2.in',
+      onComplete: reset,
+    });
+  };
 
   // 解读完成后 2.5 秒进入 RESULT
   useEffect(() => {
@@ -150,25 +162,66 @@ export default function RevealStage() {
         ))}
       </div>
 
-      {/* AI 解读区域 */}
+      {/* 解读区域 */}
       {showInterpret && (
         <div ref={interpretRef} className={styles.interpretation}>
           <h2 className={styles.interpretTitle}>{copy.reveal.interpretationTitle}</h2>
-          {apiError ? (
-            <div className={styles.errorWrap}>
-              <p className={styles.errorText}>{copy.errors.apiFailed.title}</p>
-              <p className={styles.errorBody}>{copy.errors.apiFailed.body}</p>
-              <button className={styles.retryBtn} onClick={handleRetry}>
-                重新加载解读
-              </button>
+
+          <div ref={scrollAreaRef} className={styles.scrollArea}>
+            {/* 单牌牌意：无需 AI，立即可读 */}
+            <div className={styles.singleMeanings}>
+              {selectedCards.map((sc, i) => (
+                <div key={i} className={styles.sm}>
+                  <div className={styles.smHead}>
+                    <span className={styles.smPos}>{copy.reveal.shortLabels[i]}</span>
+                    <span className={styles.smName}>{sc.card.name_zh}</span>
+                    <span className={styles.smKw}>{sc.card.keywords.join(' · ')}</span>
+                  </div>
+                  <p className={styles.smMeaning}>{sc.card.meaning}</p>
+                </div>
+              ))}
             </div>
-          ) : (
-            <p ref={interpretBodyRef} className={styles.interpretBody}>
-              {stripMarkdown(interpretText) || (
-                <span className={styles.placeholder}>{copy.reveal.generatingPlaceholder}</span>
-              )}
-            </p>
-          )}
+
+            {/* 整体解读分隔 */}
+            <div className={styles.smDivider}>
+              <span className={styles.smDividerText}>牌阵整体解读</span>
+            </div>
+
+            {/* AI 整体解读 / 加载状态 / 错误 */}
+            {apiError ? (
+              <div className={styles.errorWrap}>
+                <p className={styles.errorText}>{copy.errors.apiFailed.title}</p>
+                <p className={styles.errorBody}>{copy.errors.apiFailed.body}</p>
+                <button className={styles.retryBtn} onClick={handleRetry}>
+                  重新加载解读
+                </button>
+              </div>
+            ) : stripMarkdown(interpretText) ? (
+              <p className={styles.interpretBody}>{stripMarkdown(interpretText)}</p>
+            ) : (
+              <div className={styles.loading}>
+                <div className={styles.loadingRow}>
+                  <span className={styles.loadingText}>{copy.reveal.generatingPlaceholder}</span>
+                  <span className={styles.dots}>
+                    <i /><i /><i />
+                  </span>
+                </div>
+                {/* 不确定型进度条：长度未知，仅表示「正在计算」 */}
+                <div className={styles.progressTrack}>
+                  <div className={styles.progressBar} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 再来一次 */}
+          <button
+            className={styles.restartBtn}
+            onClick={handleRestart}
+            disabled={fading}
+          >
+            再来一次
+          </button>
         </div>
       )}
     </div>

@@ -64,12 +64,42 @@ export default function ResultStage() {
     setIsSharing(true);
     setShareLabel('生成中…');
     try {
+      const node = shareCardRef.current;
+
+      // 1) 等字体就绪
       await document.fonts.ready;
-      const dataUrl = await toPng(shareCardRef.current, {
+
+      // 2) 等卡片内所有图片真正解码完成——否则首帧会截到空白/黑图
+      const imgs = Array.from(node.querySelectorAll('img'));
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete && img.naturalWidth > 0
+            ? Promise.resolve()
+            : img.decode().catch(() => undefined)
+        )
+      );
+
+      const opts = {
         cacheBust: true,
         pixelRatio: 2,
         backgroundColor: '#04040C',
-      });
+        width: node.offsetWidth,
+        height: node.offsetHeight,
+        // 关键：卡片在页面上用 fixed + -9999px 离屏隐藏，克隆进 SVG foreignObject 时
+        // 这套定位会把内容推出画布，导致只剩背景色（纯黑无内容）。
+        // style 只作用于截图用的克隆副本，把定位重置回正常流，不影响页面原元素。
+        style: {
+          position: 'static',
+          top: '0',
+          left: '0',
+          margin: '0',
+        },
+      };
+
+      // 3) WebKit/Safari 首次（有时前两次）渲染常为空白，预热后取稳定结果
+      await toPng(node, opts);
+      await toPng(node, opts);
+      const dataUrl = await toPng(node, opts);
 
       let shared = false;
       if (typeof navigator.share === 'function') {
@@ -222,7 +252,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
         {selectedCards.map((sc, i) => (
           <div key={i} className={styles.scCardItem}>
             <img src={sc.card.image} className={styles.scCardImg}
-                 alt={sc.card.name_zh} crossOrigin="anonymous" />
+                 alt={sc.card.name_zh} />
             <span className={styles.scCardPos}>{copy.reveal.shortLabels[i]}</span>
             <span className={styles.scCardName}>{sc.card.name_zh}</span>
           </div>

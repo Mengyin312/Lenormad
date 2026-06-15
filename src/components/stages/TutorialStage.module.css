@@ -81,6 +81,14 @@
   line-height: 1.85;
 }
 
+/* 高亮关键动作词：更白、更粗 */
+.emphasis {
+  color: #FFFFFF;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+}
+
 /* ─── 底部提示区 ─────────────────────────────────────────────────── */
 .indicator {
   display: flex;
