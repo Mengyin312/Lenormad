@@ -3,9 +3,10 @@ import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
 import { useAppStore } from './useAppState';
 import { isFist, getPinchDistance, isPalmOpen } from '../utils/gestureHelpers';
 
-const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm';
-const MODEL_URL =
-  'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+// 自托管：从本站加载，避免国内访问被墙的 jsDelivr / storage.googleapis.com
+// wasm 来自 node_modules/@mediapipe/tasks-vision/wasm（与依赖版本一致），模型来自 public/models
+const WASM_URL = '/mediapipe/wasm';
+const MODEL_URL = '/models/hand_landmarker.task';
 
 const SMOOTH_FRAMES = 3;
 type LandmarkBuffer = { x: number; y: number; z: number }[][];

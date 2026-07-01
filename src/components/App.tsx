@@ -14,6 +14,7 @@ import ParticleBackground from './shared/ParticleBackground';
 import ClickParticles from './shared/ClickParticles';
 import HaloRing from './shared/HaloRing';
 import ErrorOverlay from './shared/ErrorOverlay';
+import WechatHint from './shared/WechatHint';
 import styles from './App.module.css';
 
 const TRACKING_STAGES = new Set(['TUTORIAL', 'QUESTION', 'SHUFFLE', 'DRAW', 'REVEAL', 'RESULT']);
@@ -79,6 +80,8 @@ export default function App() {
       {/* TUTORIAL 阶段用内置进度环，全局 HaloRing 只在其他阶段显示 */}
       {stage !== 'TUTORIAL' && <HaloRing />}
       <ErrorOverlay />
+      {/* 微信内置浏览器禁用摄像头，提示在系统浏览器打开 */}
+      <WechatHint />
 
       {/* 静音按钮（右上角，悬停才显示） */}
       {PARTICLE_STAGES.has(stage) && (
